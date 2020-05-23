@@ -5,13 +5,13 @@ MyReads is a modern book-tracing application that allows you to keep track of bo
 ## Installation
 
 You can get the project up and running by following in order the processes outlined below:
-- `npm install`: This installs all of the project dependencies and adds a _node_modules_ folder to the root of your project where all the dependency files live .
-- `npm start`:  Gets the project ruuning on a local server on your computer.
+- `yarn install`: This installs all of the project dependencies and adds a _node_modules_ folder to the root of your project where all the dependency files live .
+- `yarn start`:  Gets the project ruuning on a local server on your computer.
 
 ### Example:
 ```
-$ npm install
-$ npm start
+$ yarn install
+$ yarn start
 ```
 
 ## Usage
