@@ -10,80 +10,87 @@ class BooksApp extends React.Component {
     books: [],
     allBooks: [],
     searchQuery: ''
-    
+
   }
 
-   componentDidMount() {	
+  componentDidMount() {
     BooksAPI.getAll()
       .then((books) => {
-    	this.setState(() => ({
-        	books
+        this.setState(() => ({
+          books
         }))
-    })
-  } 
+      })
+  }
 
   searchBooks = (value) => {
     BooksAPI.search(value, 21).then((allBooks) => {
 
       if (allBooks !== undefined && Array.isArray(allBooks)) {
-        
+
         const filteredBooks = allBooks.filter(book => book.imageLinks !== undefined).map(newBook => {
-           newBook.shelf = 'none'
-           this.state.books.forEach(book => {
-           	if (book.id === newBook.id) {
+          newBook.shelf = 'none'
+          this.state.books.forEach(book => {
+            if (book.id === newBook.id) {
               newBook.shelf = book.shelf
             }
-           })
-          
-           return newBook
-         })
+          })
 
-      	this.setState(() => ({
-        	allBooks: [...filteredBooks]
+          return newBook
+        })
+
+        this.setState(() => ({
+          allBooks: [...filteredBooks]
         }))
-        
-      }else {
-      	this.setState(() => ({
-        	allBooks: []
+
+      } else {
+        this.setState(() => ({
+          allBooks: []
         }))
       }
     })
   }
 
   handleChange = (e) => {
-   const { value } = e.target;
-   this.setState(() => ({ searchQuery: value })) 
-   this.searchBooks(value)
+    const { value } = e.target;
+    this.setState(() => ({ searchQuery: value }))
+    this.searchBooks(value)
+  }
+
+  clearQuery = () => {
+    this.setState(() => ({
+      searchQuery: ''
+    }))
   }
 
   updateOption = (e, newBook) => {
     const { value } = e.target
     BooksAPI.update(newBook, value).then((response) => {
       BooksAPI.getAll()
-      .then((books) => {
-    	this.setState(() => ({
-        	books
-        }))
-      })
+        .then((books) => {
+          this.setState(() => ({
+            books
+          }))
+        })
     })
   }
 
   render() {
     return (
       <div className="app">
-       					<Route exact path="/search" render={() => (
-        							<SearchPage 
-       									togglePage={this.togglePage}
-       									books={this.state.allBooks}
-      									updateOption={this.updateOption}
-										handleChange={this.handleChange}
-										searchQuery={this.state.searchQuery}
-      									/>)}/>
-						<Route exact path="/" render={() => (
-									 <BooksPage
-										togglePage={this.togglePage}
-										updateOption={this.updateOption}
-										books={this.state.books}/>)}/>
+        <Route exact path="/search" render={({ history }) => (
+          <SearchPage
+            togglePage={this.togglePage}
+            books={this.state.allBooks}
+            clearQuery={this.clearQuery}
+            updateOption={this.updateOption}
+            handleChange={this.handleChange}
+            searchQuery={this.state.searchQuery}
+          />)} />
+        <Route exact path="/" render={() => (
+          <BooksPage
+            togglePage={this.togglePage}
+            updateOption={this.updateOption}
+            books={this.state.books} />)} />
       </div>
     )
   }
